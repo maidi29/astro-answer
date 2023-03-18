@@ -6,12 +6,24 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: Android;
+  src: url(../fonts/android_7.ttf);
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --color-primary: #070E22;
   --color-secondary: #4c4d9d;
   --color-tertiary: #fad0e3;
-  --color-quartiary: #fff491;
+  --color-quartiary: #FFE785;
   --color-highlight: #DA3BB3;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html {
@@ -23,6 +35,16 @@ body {
   font: 16px Comfortaa, sans-serif;
   background: var(--color-primary);
   color: var(--color-tertiary);
+  line-height: 1.5;
+}
+
+h1 {
+  font-family: Android, Comfortaa, sans-serif;
+  font-weight: normal;
+  font-size: 3rem;
+  margin: 0;
+  text-shadow: 2px 2px #000;
+  line-height: 1;
 }
 
 a {
@@ -36,5 +58,89 @@ container {
 canvas, #celestial-map {
   height: 100vh !important;
   width: 100vw !important;
+  object-fit: cover;
   display: block;
+  position:fixed;
+  z-index: 0;
+}
+
+#celestial-zoomin, #celestial-zoomout {
+  position:absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: #fff;
+  border: 1px solid #fff;
+  opacity: 0.2;
+  background: var(--color-primary);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+#celestial-zoomout {
+  right: 3rem;
+}
+
+.main {
+  position: absolute;
+  min-width: calc(100% - 4rem);
+  min-height: calc(100% - 4rem);
+  margin: 2rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.zodiac {
+  align-self: flex-start;
+  width: 30%;
+  max-width: 450px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.color-secondary {
+  color: var(--color-secondary);
+}
+
+button {
+  padding: 1rem;
+  font-size: 1rem;
+  color: #ffffff;
+  background: var(--color-secondary);
+  width: auto;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #a1a2d1;
+}
+
+.modal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-primary);
+  justify-content: center;
+}
+
+.modal img {
+  cursor: pointer;
+  border-radius: 50%;
+  display: none;
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal img:hover {
+  box-shadow: 0px 0px 15px #fff;
+  filter: contrast(150%);
 }

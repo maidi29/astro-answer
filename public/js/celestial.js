@@ -99,8 +99,8 @@
         d3.select(window).on('resize', resize);
 
         if (cfg.interactive === true && cfg.controls === true && $("celestial-zoomin") === null) {
-            d3.select(parentElement).append("input").attr("type", "button").attr("id", "celestial-zoomin").attr("value", "\u002b").on("click", function () { zoomBy(1.25); return false; });
-            d3.select(parentElement).append("input").attr("type", "button").attr("id", "celestial-zoomout").attr("value", "\u2212").on("click", function () { zoomBy(0.8); return false; });
+            d3.select(parentElement).append("input").attr("type", "button").attr("id", "celestial-zoomin").attr("value", "\u002b").attr("title", "Zoom in").on("click", function () { zoomBy(1.25); return false; });
+            d3.select(parentElement).append("input").attr("type", "button").attr("id", "celestial-zoomout").attr("value", "\u2212").attr("title", "Zoom out").on("click", function () { zoomBy(0.8); return false; });
         }
 
         circle = d3.geo.circle().angle([90]);
