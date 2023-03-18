@@ -1,0 +1,40 @@
+@font-face {
+  font-family: Comfortaa;
+  src: url(../fonts/Comfortaa-Regular.ttf);
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-primary: #070E22;
+  --color-secondary: #4c4d9d;
+  --color-tertiary: #fad0e3;
+  --color-quartiary: #fff491;
+  --color-highlight: #DA3BB3;
+}
+
+html {
+  font-size: 16px;
+}
+body {
+  margin:0;
+  padding:0;
+  font: 16px Comfortaa, sans-serif;
+  background: var(--color-primary);
+  color: var(--color-tertiary);
+}
+
+a {
+  color: var(--color-highlight);
+}
+
+container {
+  display: none;
+}
+
+canvas, #celestial-map {
+  height: 100vh !important;
+  width: 100vw !important;
+  display: block;
+}
