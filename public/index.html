@@ -22,21 +22,22 @@
     <h1>Astro Answers</h1>
     <div class="zodiac" id="zodiac">
         <button onClick="toggleModal(this)">Select your zodiac sign</button>
-        <div class="color-secondary">to get your daily AI horoscope</div>
+        <div class="color-secondary-font">to get your daily AI horoscope</div>
     </div>
     <div class="modal" id="modal"></div>
     <div class="q-and-a">
         <form id="question-form" method="POST">
         <label for="question">Your question to the universe:</label>
-            <div>
+            <div class="input-wrapper">
                 <input type="text" maxlength="200" id="question"/>
                 <button type="submit" onclick="getAnswer()">Send</button>
             </div>
         </form>
-        <div id="answer"></div>
+        <div id="answer" class="answer"></div>
     </div>
     <footer>
-        <a href="https://www.flaticon.com/stickers-pack/astrological-sign">Zodiac stickers created by Stickers - Flaticon</a>
+        <a href="https://www.mermaidi.de" target="_blank">👽 Maidi</a>
+        <a href="https://www.flaticon.com/stickers-pack/astrological-sign" target="_blank">Zodiac stickers created by Stickers - Flaticon</a>
     </footer>
 </main>
 
@@ -44,5 +45,6 @@
 <script src="/lib/d3.geo.projection.min.js"></script>
 <script src="/js/celestial.js"></script>
 <script src="/js/index.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </body>
 </html>

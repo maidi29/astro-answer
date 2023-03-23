@@ -197,10 +197,18 @@ const today = new Date();
 const setZodiacAndGetHoroscope = (zodiac) => {
     const zodiacArea = document.getElementById('zodiac');
     zodiacArea.innerHTML = `
-        <img class="zodiac-img" src="images/${zodiac}.png" onClick="toggleModal(event)" width="64" alt="${zodiac}" title="Change"/>
-        <h2>${zodiac.charAt(0).toUpperCase()}${zodiac.slice(1)}</h2>
-        <h3>${today.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
-        <div id="horoscope">Writing horoscope...</div>
+        <details open>
+            <summary>
+                <img class="zodiac-img" src="images/${zodiac}.png" onClick="toggleModal(event)" width="64" alt="${zodiac}" title="Change"/>
+                <div>
+                    <h2>${zodiac.charAt(0).toUpperCase()}${zodiac.slice(1)}</h2>
+                    <h4>${today.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h4>
+                </div>
+            </summary>
+            <div id="horoscope" class="horoscope">
+                <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px"  loop autoplay></lottie-player>
+            </div>
+        </details>
     `;
     fetch('/api/horoscope',
         {
@@ -226,7 +234,9 @@ const getAnswer = (event) => {
     event.preventDefault();
     console.log(event);
     const question = document.getElementById('question').value;
-    document.getElementById('answer').innerText = 'Loading...';
+    document.getElementById('answer').innerHTML = `
+       <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px"  loop autoplay></lottie-player>
+`;
     fetch('/api/question',
         {
             method: "POST",

@@ -5,6 +5,8 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
+const horoscopes = {};
+
 module.exports.generateHoroscope = async (req, res) => {
   if (!configuration.apiKey) {
     res.status(500).json({
@@ -17,6 +19,15 @@ module.exports.generateHoroscope = async (req, res) => {
 
   const zodiac = req.body.zodiac;
 
+  const nowDate = new Date();
+  const today = nowDate.getFullYear()+'/'+(nowDate.getMonth()+1)+'/'+nowDate.getDate();
+  if(!horoscopes[today]) {
+    horoscopes[today] = {};
+  }
+  if (horoscopes[today][zodiac]) {
+    res.status(200).json({horoscope: horoscopes[today][zodiac]});
+    return;
+  }
   try {
     let horoscope = await openai.createCompletion({
       model: "text-davinci-003",
@@ -25,6 +36,8 @@ module.exports.generateHoroscope = async (req, res) => {
       max_tokens: 2048,
     });
     horoscope = horoscope.data.choices[0].text;
+    horoscopes[today][zodiac] = horoscope;
+    console.log(horoscopes);
     res.status(200).json({horoscope});
     } catch (error) {
     if (error.response) {
