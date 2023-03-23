@@ -45,6 +45,13 @@ h1 {
   margin: 0;
   text-shadow: 2px 2px #000;
   line-height: 1;
+  background: var(--color-primary);
+  text-align: center;
+}
+
+h2, h3 {
+  font-weight: normal;
+  margin: 0;
 }
 
 a {
@@ -56,7 +63,7 @@ container {
 }
 
 canvas, #celestial-map {
-  height: 100vh !important;
+  height: 100% !important;
   width: 100vw !important;
   object-fit: cover;
   display: block;
@@ -91,17 +98,28 @@ canvas, #celestial-map {
   align-items: center;
   flex-direction: column;
   gap: 2rem;
+  pointer-events: none;
+}
+
+.main * {
+  pointer-events: auto;
 }
 
 .zodiac {
   align-self: flex-start;
-  width: 30%;
-  max-width: 450px;
-  min-width: 300px;
+  max-width: 50%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: flex-start;
+  padding: 1rem;
+  background: var(--color-primary);
+}
+
+@media screen and (min-width: 900px) {
+  .zodiac {
+    max-width: 30%;
+  }
 }
 
 .color-secondary {
@@ -115,6 +133,7 @@ button {
   background: var(--color-secondary);
   width: auto;
   cursor: pointer;
+  border: none;
 }
 
 button:hover {
@@ -122,25 +141,63 @@ button:hover {
 }
 
 .modal {
-  display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   padding: 1rem;
   background: var(--color-primary);
   justify-content: center;
-}
-
-.modal img {
-  cursor: pointer;
-  border-radius: 50%;
   display: none;
 }
 
-.modal.show {
-  display: block;
+.modal figure {
+  display: flex;
+  margin: 0;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  cursor: pointer;
 }
 
-.modal img:hover {
+.modal img, .zodiac-img {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.zodiac-img {
+  align-self: center;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal figure:hover img {
   box-shadow: 0px 0px 15px #fff;
   filter: contrast(150%);
+}
+
+.q-and-a {
+  margin-top: auto;
+  padding: 1rem;
+  background: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  text-align: center;
+}
+
+label {
+  font-size: 1.2rem;
+}
+
+footer {
+  font-size: 0.75rem;
+  background: var(--color-primary);
+}
+
+input {
+  padding: 1rem;
+  border: 0;
+  font-size: 1rem;
 }

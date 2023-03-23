@@ -20,28 +20,26 @@
 <div id="celestial-map"></div>
 <main class="main">
     <h1>Astro Answers</h1>
-    <div class="zodiac">
-        <button>Select your zodiac sign</button>
+    <div class="zodiac" id="zodiac">
+        <button onClick="toggleModal(this)">Select your zodiac sign</button>
         <div class="color-secondary">to get your daily AI horoscope</div>
     </div>
-    <div class="modal">
-        <img src="images/capricorn.png" width="128" alt="capricorn" title="capricorn">
-        <img src="images/aquarius.png" width="128" alt="aquarius" title="aquarius">
-        <img src="images/pisces.png" width="128" alt="pisces" title="pisces">
-        <img src="images/aries.png" width="128" alt="aries" title="aries">
-        <img src="images/taurus.png" width="128" alt="taurus" title="taurus">
-        <img src="images/gemini.png" width="128" alt="gemini" title="gemini">
-        <img src="images/cancer.png" width="128" alt="cancer" title="cancer">
-        <img src="images/leo.png" width="128" alt="leo" title="leo">
-        <img src="images/virgo.png" width="128" alt="virgo" title="virgo">
-        <img src="images/libra.png" width="128" alt="libra" title="libra">
-        <img src="images/scorpio.png" width="128" alt="scorpio" title="scorpio">
-        <img src="images/sagittarius.png" width="128" alt="sagittarius" title="sagittarius">
+    <div class="modal" id="modal"></div>
+    <div class="q-and-a">
+        <form id="question-form" method="POST">
+        <label for="question">Your question to the universe:</label>
+            <div>
+                <input type="text" maxlength="200" id="question"/>
+                <button type="submit" onclick="getAnswer()">Send</button>
+            </div>
+        </form>
+        <div id="answer"></div>
     </div>
+    <footer>
+        <a href="https://www.flaticon.com/stickers-pack/astrological-sign">Zodiac stickers created by Stickers - Flaticon</a>
+    </footer>
 </main>
-<footer>
-    <a href="https://www.flaticon.com/stickers-pack/astrological-sign">Zodiac stickers created by Stickers - Flaticon</a>
-</footer>
+
 <script src="/lib/d3.min.js"></script>
 <script src="/lib/d3.geo.projection.min.js"></script>
 <script src="/js/celestial.js"></script>
