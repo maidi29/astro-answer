@@ -27,8 +27,15 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 13px;
 }
+
+@media screen and (min-width: 600px) {
+  html {
+    font-size: 16px;
+  }
+}
+
 
 body {
   margin:0;
@@ -46,8 +53,11 @@ h1 {
   margin: 0;
   text-shadow: 2px 2px #000;
   line-height: 1;
-  background: var(--color-primary);
   text-align: center;
+}
+
+h1 span {
+  background: var(--color-primary);
 }
 
 h2, h3, h4 {
@@ -107,7 +117,7 @@ canvas, #celestial-map {
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   pointer-events: none;
 }
 
