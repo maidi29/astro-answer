@@ -232,7 +232,6 @@ const setZodiacAndGetHoroscope = (zodiac) => {
 
 const getAnswer = (event) => {
     event.preventDefault();
-    console.log(event);
     const question = document.getElementById('question').value;
     document.getElementById('answer').innerHTML = `
        <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px; margin:auto;"  loop autoplay></lottie-player>

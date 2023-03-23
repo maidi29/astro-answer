@@ -37,7 +37,6 @@ module.exports.generateHoroscope = async (req, res) => {
     });
     horoscope = horoscope.data.choices[0].text;
     horoscopes[today][zodiac] = horoscope;
-    console.log(horoscopes);
     res.status(200).json({horoscope});
     } catch (error) {
     if (error.response) {
