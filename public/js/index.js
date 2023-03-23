@@ -206,7 +206,7 @@ const setZodiacAndGetHoroscope = (zodiac) => {
                 </div>
             </summary>
             <div id="horoscope" class="horoscope">
-                <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px"  loop autoplay></lottie-player>
+                <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px; margin:auto;"  loop autoplay></lottie-player>
             </div>
         </details>
     `;
@@ -235,7 +235,7 @@ const getAnswer = (event) => {
     console.log(event);
     const question = document.getElementById('question').value;
     document.getElementById('answer').innerHTML = `
-       <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px"  loop autoplay></lottie-player>
+       <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px; margin:auto;"  loop autoplay></lottie-player>
 `;
     fetch('/api/question',
         {
