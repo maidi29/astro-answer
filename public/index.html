@@ -26,10 +26,10 @@
     </div>
     <div class="modal" id="modal"></div>
     <div class="q-and-a">
-        <form id="question-form" method="POST">
+        <form id="question-form" method="POST" autocomplete="off">
         <label for="question">Your question to the universe</label>
             <div class="input-wrapper">
-                <input type="text" maxlength="200" id="question"/>
+                <input type="text" maxlength="200" minlength="5" required id="question" placeholder='E.g. "What is the meaning of life?"'/>
                 <button type="submit" onclick="getAnswer()"> → </button>
             </div>
         </form>

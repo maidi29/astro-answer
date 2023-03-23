@@ -40,7 +40,7 @@ html {
 body {
   margin:0;
   padding:0;
-  font: 16px Comfortaa, sans-serif;
+  font: 1rem Comfortaa, sans-serif;
   background: var(--color-primary);
   color: var(--color-tertiary);
   line-height: 1.5;
