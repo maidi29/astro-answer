@@ -1,6 +1,6 @@
-# fly.toml file generated for astro-answers on 2023-03-23T16:21:56+01:00
+# fly.toml file generated for astro-answer on 2023-03-23T21:34:53+01:00
 
-app = "astro-answers"
+app = "astro-answer"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []

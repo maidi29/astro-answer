@@ -85,6 +85,12 @@ canvas, #celestial-map {
   display: block;
   position:fixed;
   z-index: 0;
+  cursor: grab;
+}
+
+/* (Optional) Apply a "closed-hand" cursor during drag operation. */
+canvas:active, #celestial-map:active {
+  cursor: grabbing;
 }
 
 #celestial-zoomin, #celestial-zoomout {
@@ -172,15 +178,18 @@ canvas, #celestial-map {
 button {
   padding: 1rem;
   font-size: 1.2rem;
-  color: #ffffff;
-  background: var(--color-secondary);
+  color: #fff;
   width: auto;
   cursor: pointer;
   border: none;
+  background-image: linear-gradient(35deg, var(--color-secondary), var(--color-highlight));
+  background-size: 200% auto;
+  transition: all 500ms ease-in-out;
+  background-position: left center;
 }
 
 button:hover {
-  background: #a1a2d1;
+  background-position: right center;
 }
 
 .modal {

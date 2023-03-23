@@ -8,11 +8,15 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 
 var app = express();
+var cors = require('cors')
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors({
+  origin: ['https://astro-answer.com', 'https://www.astro-answer.com', 'https://astro-answer.fly.dev']
+}))
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'public'));
 app.engine('html', require('ejs').renderFile);
