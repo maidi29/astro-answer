@@ -29,6 +29,7 @@
 html {
   font-size: 16px;
 }
+
 body {
   margin:0;
   padding:0;
@@ -135,6 +136,7 @@ canvas, #celestial-map {
   cursor: pointer;
   margin-left: auto;
 }
+
 .zodiac details[open] summary:after {
   rotate: 90deg;
 }
@@ -213,6 +215,7 @@ button:hover {
   align-items: center;
   text-align: center;
   max-width: 800px;
+  width: 100%;
 }
 
 label {
@@ -224,18 +227,21 @@ input {
   border: 0;
   font-size: 1.2rem;
   color: var(--color-primary);
+  flex: 1;
 }
 
 form {
   display: flex;
   gap: 1rem;
   flex-direction: column;
+  width: 100%;
 }
 
 .input-wrapper {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  width: 100%;
 }
 
 .answer {
