@@ -54,7 +54,8 @@ module.exports.generateHoroscope = async (req, res) => {
 };
 
 const horoscopePrompt = (zodiac) => {
-  return `Generate a horoscope for today for a zodiac sign. Include star constellations for reasoning. Do 2-4 short sentences.
+  return `Generate a horoscope for today for a zodiac sign. You can include star constellations for reasoning. Do 2-4 short 
+  sentences and assume concrete happenings or suggest actions.
   Zodiac sign: ${zodiac}
   Horocope:`;
 };

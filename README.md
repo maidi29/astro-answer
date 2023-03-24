@@ -1,4 +1,4 @@
-# Astro Answer 🌟
+# Astro Answer 💫
 
 ## [https://astro-answer.com/](https://astro-answer.com/)
 

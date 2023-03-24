@@ -1,0 +1,21 @@
+{
+  "name": "Astro Answer",
+  "description": "Explore the wisdom of the universe with AI-generated horoscopes and personalized answers to your questions",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://astro-answer.com/api/horoscope",
+    "https://astro-answer.com/api/question"
+  ]
+}

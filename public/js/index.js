@@ -1,3 +1,4 @@
+const zodiacs = ['capricorn','aquarius', 'pisces', 'aries', 'taurus', 'gemini', 'cancer', 'leo','virgo', 'libra','scorpio', 'sagittarius'];
 
 const config = {
     width: window.innerHeight - window.innerWidth < 0 ? 0 : window.innerHeight * 2, // Default width, 0 = full parent element width;// height is determined by projection
@@ -178,13 +179,17 @@ onresize = () => {
     Celestial.resize({width: window.innerHeight - window.innerWidth < 0 ? 0 : window.innerHeight});
 };
 
-
 toggleModal = (event) => {
     const modal = document.getElementById('modal');
     if (modal.classList.contains('show')) {
-        if(event?.title) {
-            localStorage.setItem('zodiac', event.title);
-            setZodiacAndGetHoroscope(event.title);
+        if(event?.currentTarget?.title && zodiacs.includes(event.currentTarget.title)) {
+            if(localStorage?.setItem) {
+                localStorage.setItem('zodiac', event.currentTarget.title);
+            }
+            if(chrome?.storage?.sync) {
+                chrome.storage.sync.set({'zodiac': event.currentTarget.title});
+            }
+            setZodiacAndGetHoroscope(event.currentTarget.title);
         }
         modal.classList.remove('show');
     } else {
@@ -199,7 +204,7 @@ const setZodiacAndGetHoroscope = (zodiac) => {
     zodiacArea.innerHTML = `
         <details open>
             <summary>
-                <img class="zodiac-img" src="images/${zodiac}.png" onClick="toggleModal(event)" width="64" alt="${zodiac}" title="Change"/>
+                <img class="zodiac-img" src="images/${zodiac}.png" id="select-zodiac" width="64" alt="${zodiac}" title="Change"/>
                 <div>
                     <h2>${zodiac.charAt(0).toUpperCase()}${zodiac.slice(1)}</h2>
                     <h4>${today.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h4>
@@ -210,7 +215,8 @@ const setZodiacAndGetHoroscope = (zodiac) => {
             </div>
         </details>
     `;
-    fetch('/api/horoscope',
+    document.getElementById("select-zodiac").addEventListener("click", toggleModal);
+    fetch('https://astro-answer.com/api/horoscope',
         {
             method: "POST",
             body: JSON.stringify({zodiac}),
@@ -231,12 +237,12 @@ const setZodiacAndGetHoroscope = (zodiac) => {
 }
 
 const getAnswer = (event) => {
-    event.preventDefault();
+    event?.preventDefault();
     const question = document.getElementById('question').value;
     document.getElementById('answer').innerHTML = `
        <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px; margin:auto;"  loop autoplay></lottie-player>
 `;
-    fetch('/api/question',
+    fetch('https://astro-answer.com/api/question',
         {
             method: "POST",
             body: JSON.stringify({question}),
@@ -258,16 +264,23 @@ const getAnswer = (event) => {
 
 navigator.geolocation.getCurrentPosition(successCallback);
 
-const zodiacs = ['capricorn','aquarius', 'pisces', 'aries', 'taurus', 'gemini', 'cancer', 'leo','virgo', 'libra','scorpio', 'sagittarius'];
-
 document.getElementById('modal').innerHTML = zodiacs.map((z)=> `
-    <figure onClick="toggleModal(this)" title="${z}">
+    <figure class="select-zodiac" title="${z}">
             <img src="images/${z}.png"  width="128" alt="${z}" >
             <figcaption>${z.charAt(0).toUpperCase()}${z.slice(1)}</figcaption>
         </figure>
 `).join('');
+document.querySelectorAll(".select-zodiac").forEach((element)=>element.addEventListener("click", toggleModal));
 
-const zodiac = localStorage.getItem('zodiac');
+
+let zodiac = localStorage.getItem('zodiac');
+
+if(chrome?.storage?.sync) {
+    chrome.storage.sync.get(['zodiac'], function(items) {
+        zodiac = items.zodiac;
+    });
+}
+
 if (zodiac) { setZodiacAndGetHoroscope(zodiac) }
 
 const form = document.getElementById("question-form");
