@@ -49,7 +49,7 @@ const config = {
         designationType: "desig",  // Which kind of name is displayed as designation (fieldname in starnames.json)
         designationStyle: { fill: "#ddddbb", font: "11px Comfortaa, sans-serif", align: "left", baseline: "top" },
         designationLimit: 2.5,  // Show only names for stars brighter than nameLimit
-        propername: window.innerHeight - window.innerWidth < 50,   // Show proper name (if present)
+        propername: false,   // Show proper name (if present)
         propernameType: "name", // Language for proper name, default IAU name; may vary with culture setting
                                 // (see list below of languages codes available for stars)
         propernameStyle: { fill: "#ddddbb", font: "13px Comfortaa, sans-serif", align: "right", baseline: "bottom" },
@@ -64,7 +64,7 @@ const config = {
         limit: 6,      // Show only DSOs brighter than limit magnitude
         colors: true,  // // Show DSOs in symbol colors if true, use style setting below if false
         style: { fill: "#cccccc", stroke: "#cccccc", width: 2, opacity: 1 }, // Default style for dsos
-        names: window.innerHeight - window.innerWidth < 50,   // Show DSO names
+        names: false,   // Show DSO names
         namesType: "name",  // Type of DSO ('desig' or language) name shown
                             // (see list below for languages codes available for dsos)
         nameStyle: { fill: "#cccccc", font: "11px Comfortaa, sans-serif",
@@ -119,13 +119,13 @@ const config = {
             align: "center", baseline: "middle" },
         symbolType: "symbol",  // Type of planet symbol: 'symbol' graphic planet sign, 'disk' filled circle scaled by magnitude
                                // 'letter': 1 or 2 letters S Me V L Ma J S U N
-        names: window.innerHeight - window.innerWidth < 50,          // Show name in nameType language next to symbol
+        names: false,          // Show name in nameType language next to symbol
         nameStyle: { fill: "#fad0e3", font: "12px Comfortaa, sans-serif", align: "right", baseline: "top" },
         namesType: "en"     // Language of planet name (see list below of language codes available for planets),
                                // or desig = 3-letter designation
     },
     constellations: {
-        names: window.innerHeight - window.innerWidth < 50,      // Show constellation names
+        names: false,      // Show constellation names
         namesType: "iau", // Type of name Latin (iau, default), 3 letter designation (desig) or other language (see list below)
         nameStyle: { fill:"#cccc99", align: "center", baseline: "middle",
             font: ["12px Comfortaa, sans-serif",  // Style for constellations
