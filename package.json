@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set \"NODE_ENV=production\" && node ./bin/www"
+    "start": "set \"NODE_ENV=production\" && node ./bin/www",
+    "build-extension": "copyfiles -e \"./public/manifest-newtab.json\" -u 1 ./public/**/* build",
+    "build-extension-newtab": "copyfiles -e \"./public/manifest.json\" -e \"./public/background.js\" -u 1 ./public/**/* build-newtab && node -e \"require('fs').rename('./build-newtab/manifest-newtab.json', './build-newtab/manifest.json', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\""
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

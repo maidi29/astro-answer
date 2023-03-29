@@ -1,17 +1,16 @@
 {
-  "name": "Astro Answer",
-  "description": "Explore the wisdom of the universe with AI-generated horoscopes and personalized answers to your questions",
-  "version": "0.0.1",
+  "name": "Astro Answer New Tab",
+  "description": "Explore the wisdom of the universe with AI-generated horoscopes and personalized answers to your questions in every new tab",
+  "version": "0.0.2",
   "manifest_version": 3,
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "background": {
-    "service_worker": "background.js"
+  "chrome_url_overrides": {
+    "newtab": "index.html"
   },
-  "action": {},
   "permissions": [
     "storage",
     "geolocation"

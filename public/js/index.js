@@ -1,5 +1,5 @@
 const zodiacs = ['capricorn','aquarius', 'pisces', 'aries', 'taurus', 'gemini', 'cancer', 'leo','virgo', 'libra','scorpio', 'sagittarius'];
-
+const isExtension = window.chrome && chrome.runtime && chrome.runtime.id;
 const config = {
     width: window.innerHeight - window.innerWidth < 0 ? 0 : window.innerHeight * 2, // Default width, 0 = full parent element width;// height is determined by projection
     projection: "aitoff",    // Map projection used: see below
@@ -49,7 +49,7 @@ const config = {
         designationType: "desig",  // Which kind of name is displayed as designation (fieldname in starnames.json)
         designationStyle: { fill: "#ddddbb", font: "11px Comfortaa, sans-serif", align: "left", baseline: "top" },
         designationLimit: 2.5,  // Show only names for stars brighter than nameLimit
-        propername: false,   // Show proper name (if present)
+        propername: window.innerHeight - window.innerWidth < 50,   // Show proper name (if present)
         propernameType: "name", // Language for proper name, default IAU name; may vary with culture setting
                                 // (see list below of languages codes available for stars)
         propernameStyle: { fill: "#ddddbb", font: "13px Comfortaa, sans-serif", align: "right", baseline: "bottom" },
@@ -64,7 +64,7 @@ const config = {
         limit: 6,      // Show only DSOs brighter than limit magnitude
         colors: true,  // // Show DSOs in symbol colors if true, use style setting below if false
         style: { fill: "#cccccc", stroke: "#cccccc", width: 2, opacity: 1 }, // Default style for dsos
-        names: false,   // Show DSO names
+        names: window.innerHeight - window.innerWidth < 50,   // Show DSO names
         namesType: "name",  // Type of DSO ('desig' or language) name shown
                             // (see list below for languages codes available for dsos)
         nameStyle: { fill: "#cccccc", font: "11px Comfortaa, sans-serif",
@@ -125,7 +125,7 @@ const config = {
                                // or desig = 3-letter designation
     },
     constellations: {
-        names: false,      // Show constellation names
+        names: window.innerHeight - window.innerWidth < 50,      // Show constellation names
         namesType: "iau", // Type of name Latin (iau, default), 3 letter designation (desig) or other language (see list below)
         nameStyle: { fill:"#cccc99", align: "center", baseline: "middle",
             font: ["12px Comfortaa, sans-serif",  // Style for constellations
@@ -186,7 +186,7 @@ toggleModal = (event) => {
             if(localStorage?.setItem) {
                 localStorage.setItem('zodiac', event.currentTarget.title);
             }
-            if(chrome?.storage?.sync) {
+            if(isExtension) {
                 chrome.storage.sync.set({'zodiac': event.currentTarget.title});
             }
             setZodiacAndGetHoroscope(event.currentTarget.title);
@@ -275,7 +275,7 @@ document.querySelectorAll(".select-zodiac").forEach((element)=>element.addEventL
 
 let zodiac = localStorage.getItem('zodiac');
 
-if(chrome?.storage?.sync) {
+if(isExtension) {
     chrome.storage.sync.get(['zodiac'], function(items) {
         zodiac = items.zodiac;
     });
