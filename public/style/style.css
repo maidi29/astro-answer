@@ -251,6 +251,7 @@ input {
   font-size: 1.2rem;
   color: var(--color-primary);
   flex: 1;
+  font-family: Comfortaa, sans-serif;
 }
 
 form {
