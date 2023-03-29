@@ -17,7 +17,7 @@ const config = {
     zoomlevel: 3,    // initial zoom level 0...zoomextend; 0|null = default, 1 = 100%, 0 < x <= zoomextend
     zoomextend: 10,     // maximum zoom level
     adaptable: true,    // Sizes are increased with higher zoom-levels
-    interactive: true,  // Enable zooming and rotation with mousewheel and dragging
+    interactive: !window.matchMedia("(pointer: coarse)").matches,  // Enable zooming and rotation with mousewheel and dragging
     form:  false,         // Display form for interactive settings. Needs a div with
                         // id="celestial-form", created automatically if not present
     location: false,    // Display location settings. Deprecated, use formFields below
