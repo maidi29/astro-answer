@@ -1,6 +1,8 @@
 # Astro Answer 💫
 
 ## [https://astro-answer.com/](https://astro-answer.com/)
+#### [Astro Answer New Tab Chrome Extension](https://chrome.google.com/webstore/detail/astro-answer-new-tab/kkaagpdbaejpeenfgeagkdljcfgacbnh)
+#### [Astro Answer Chrome Extension](https://chrome.google.com/webstore/detail/astro-answer/ngmlkghfcdahfgkakdnpghebgleiaimo)
 
 Astro answer is a simple web app that uses [D3 Celestial](https://github.com/ofrohn/d3-celestial) to render the actual 
 star map and constellations according to your location. 

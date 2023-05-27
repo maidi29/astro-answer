@@ -197,6 +197,15 @@ toggleModal = (event) => {
     }
 }
 
+toggleAbout = (event) => {
+    const modal = document.getElementById('about');
+    if (modal.classList.contains('show')) {
+        modal.classList.remove('show');
+    } else {
+        modal.classList.add('show');
+    }
+}
+
 const today = new Date();
 
 const setZodiacAndGetHoroscope = (zodiac) => {
@@ -216,6 +225,8 @@ const setZodiacAndGetHoroscope = (zodiac) => {
         </details>
     `;
     document.getElementById("select-zodiac").addEventListener("click", toggleModal);
+    document.getElementById("about-button").addEventListener("click", toggleAbout);
+    document.getElementById("close-about").addEventListener("click", toggleAbout);
     fetch('https://astro-answer.com/api/horoscope',
         {
             method: "POST",

@@ -228,6 +228,23 @@ button:hover {
   filter: contrast(150%);
 }
 
+.modal a {
+  text-decoration: underline;
+  color: var(--color-primary);
+}
+
+.modal.about {
+  flex-direction: column;
+  position: absolute;
+  max-width: 40rem;
+  background: var(--color-tertiary);
+  color: var(--color-primary);
+}
+
+.about-button {
+  width: fit-content;
+}
+
 .q-and-a {
   margin-top: auto;
   padding: 1rem;
