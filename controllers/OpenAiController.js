@@ -34,6 +34,7 @@ module.exports.generateHoroscope = async (req, res) => {
       temperature: 1,
       max_tokens: 2048,
     });
+    console.log(completion)
     let horoscope = completion.choices[0].text;
     horoscopes[today][zodiac] = horoscope;
     res.status(200).json({horoscope});
@@ -62,7 +63,7 @@ const horoscopePrompt = (zodiac) => {
 
 
 module.exports.getAnswer = async (req, res) => {
-  if (!configuration.apiKey) {
+  if (!openai.apiKey) {
     res.status(500).json({
       error: {
         message: "OpenAI API key not configured.",
