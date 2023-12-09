@@ -74,13 +74,13 @@ module.exports.getAnswer = async (req, res) => {
   const question = req.body.question;
 
   try {
-    let answer = await openai.createCompletion({
-      model: "text-davinci-003",
+    const completion = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
       prompt: questionPrompt(question),
       temperature: 1,
       max_tokens: 2048,
     });
-    answer = answer.data.choices[0].text;
+    let answer = completion.choices[0].text;
     res.status(200).json({answer});
   } catch (error) {
     if (error.response) {
