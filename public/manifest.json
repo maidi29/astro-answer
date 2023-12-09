@@ -1,7 +1,7 @@
 {
   "name": "Astro Answer",
   "description": "Explore the wisdom of the universe with AI-generated horoscopes and personalized answers to your questions",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "manifest_version": 3,
   "icons": {
     "16": "icon16.png",

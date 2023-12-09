@@ -1,14 +1,13 @@
-const { Configuration, OpenAIApi } = require("openai");
+import OpenAI from "openai";
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // This is also the default, can be omitted
 });
-const openai = new OpenAIApi(configuration);
 
 const horoscopes = {};
 
 module.exports.generateHoroscope = async (req, res) => {
-  if (!configuration.apiKey) {
+  if (!openai.apiKey) {
     res.status(500).json({
       error: {
         message: "OpenAI API key not configured.",
@@ -29,13 +28,13 @@ module.exports.generateHoroscope = async (req, res) => {
     return;
   }
   try {
-    let horoscope = await openai.createCompletion({
-      model: "text-davinci-003",
+    const completion = await openai.completions.create({
+      model: "gpt-3.5-turbo-instruct",
       prompt: horoscopePrompt(zodiac),
       temperature: 1,
       max_tokens: 2048,
     });
-    horoscope = horoscope.data.choices[0].text;
+    let horoscope = completion.choices[0].text;
     horoscopes[today][zodiac] = horoscope;
     res.status(200).json({horoscope});
     } catch (error) {
