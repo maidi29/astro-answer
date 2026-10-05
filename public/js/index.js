@@ -1,5 +1,20 @@
-const zodiacs = ['capricorn','aquarius', 'pisces', 'aries', 'taurus', 'gemini', 'cancer', 'leo','virgo', 'libra','scorpio', 'sagittarius'];
+const zodiacs = {
+    aries: 'Mar 21 – Apr 19',
+    taurus: 'Apr 20 – May 20',
+    gemini: 'May 21 – Jun 20',
+    cancer: 'Jun 21 – Jul 22',
+    leo: 'Jul 23 – Aug 22',
+    virgo: 'Aug 23 – Sep 22',
+    libra: 'Sep 23 – Oct 22',
+    scorpio: 'Oct 23 – Nov 21',
+    sagittarius: 'Nov 22 – Dec 21',
+    capricorn: 'Dec 22 – Jan 19',
+    aquarius: 'Jan 20 – Feb 18',
+    pisces: 'Feb 19 – Mar 20',
+};
 const isExtension = window.chrome && chrome.runtime && chrome.runtime.id;
+// Extensions and pages opened as a file can't use relative API paths
+const API = isExtension || location.protocol === 'file:' ? 'https://astro-answer.com/api' : '/api';
 const config = {
     width: window.innerHeight - window.innerWidth < 0 ? 0 : window.innerHeight * 2, // Default width, 0 = full parent element width;// height is determined by projection
     projection: "aitoff",    // Map projection used: see below
@@ -169,133 +184,270 @@ const config = {
     }
 };
 
-Celestial.display(config);
-const successCallback = (position) => {
-    const geopos = [position.coords.latitude, position.coords.longitude];
-    Celestial.location(geopos)
+
+// The star map is decoration, so the rest of the page keeps working if it fails to load
+let mapReady = false;
+try {
+    Celestial.display(config);
+    mapReady = true;
+
+    onresize = () => {
+        Celestial.resize({width: window.innerHeight - window.innerWidth < 0 ? 0 : window.innerHeight});
+    };
+
+    navigator.geolocation.getCurrentPosition((position) => {
+        Celestial.location([position.coords.latitude, position.coords.longitude]);
+    });
+} catch (e) {
+    console.error('Could not display star map', e);
+}
+
+// "The sky above <place>, <date and time>" below the title
+let coords = null;
+let place = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').split('/').pop().replace(/_/g, ' ');
+
+const sky = document.getElementById('sky');
+const skyReset = document.getElementById('sky-reset');
+let skyShown = true;
+
+const renderSky = () => {
+    const now = new Date().toLocaleString(undefined, { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    sky.textContent = place ? `The sky above ${place}, ${now}` : `The sky, ${now}`;
+    skyReset.textContent = place ? `↺ Back to the sky above ${place}` : '↺ Back to your sky';
+};
+renderSky();
+setInterval(() => skyShown && renderSky(), 30 * 1000);
+
+// Once the map is dragged or zoomed it no longer shows the sky above the visitor.
+// The view right before the first interaction is remembered, so it can be restored.
+let skyView = null;
+
+const rememberView = () => {
+    if (skyShown && mapReady) {
+        skyView = {center: Celestial.rotate().slice(), zoom: Celestial.zoomBy()};
+    }
 };
 
-onresize = () => {
-    Celestial.resize({width: window.innerHeight - window.innerWidth < 0 ? 0 : window.innerHeight});
+const hideSky = () => {
+    if (!skyShown || !skyView) return;
+    skyShown = false;
+    sky.classList.add('hidden');
+    skyReset.classList.remove('hidden');
 };
 
-toggleModal = (event) => {
-    const modal = document.getElementById('modal');
-    if (modal.classList.contains('show')) {
-        if(event?.currentTarget?.title && zodiacs.includes(event.currentTarget.title)) {
-            if(localStorage?.setItem) {
-                localStorage.setItem('zodiac', event.currentTarget.title);
-            }
-            if(isExtension) {
-                chrome.storage.sync.set({'zodiac': event.currentTarget.title});
-            }
-            setZodiacAndGetHoroscope(event.currentTarget.title);
-        }
-        modal.classList.remove('show');
-    } else {
-        modal.classList.add('show');
+skyReset.addEventListener('click', () => {
+    Celestial.rotate({center: skyView.center.slice()});
+    Celestial.zoomBy(skyView.zoom / Celestial.zoomBy());
+    skyShown = true;
+    renderSky();
+    sky.classList.remove('hidden');
+    skyReset.classList.add('hidden');
+});
+const map = document.getElementById('celestial-map');
+let dragStart = null;
+// Capture phase, so the view is remembered before the map itself reacts
+map.addEventListener('wheel', () => { rememberView(); hideSky(); }, {capture: true, passive: true});
+map.addEventListener('pointerdown', (event) => {
+    rememberView();
+    dragStart = {x: event.clientX, y: event.clientY};
+}, {capture: true});
+map.addEventListener('pointerup', () => dragStart = null);
+map.addEventListener('pointermove', (event) => {
+    if (dragStart && Math.hypot(event.clientX - dragStart.x, event.clientY - dragStart.y) > 5) {
+        hideSky();
     }
-}
-
-toggleAbout = (event) => {
-    const modal = document.getElementById('about');
-    if (modal.classList.contains('show')) {
-        modal.classList.remove('show');
-    } else {
-        modal.classList.add('show');
+});
+document.addEventListener('click', (event) => {
+    if (event.target.closest('#celestial-zoomin, #celestial-zoomout')) {
+        hideSky();
     }
-}
+});
+document.addEventListener('pointerdown', (event) => {
+    if (event.target.closest('#celestial-zoomin, #celestial-zoomout')) {
+        rememberView();
+    }
+}, {capture: true});
 
-const today = new Date();
+navigator.geolocation?.getCurrentPosition((position) => {
+    const {latitude, longitude} = position.coords;
+    // Rounded (~1 km) - enough to know what is above the horizon
+    coords = {latitude: +latitude.toFixed(2), longitude: +longitude.toFixed(2)};
+    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=${navigator.language.split('-')[0]}`)
+        .then((response) => response.ok ? response.json() : Promise.reject(response))
+        .then((data) => {
+            place = data.city || data.locality || data.principalSubdivision || data.countryName || place;
+            renderSky();
+        })
+        .catch(() => {});
+});
 
-const setZodiacAndGetHoroscope = (zodiac) => {
-    const zodiacArea = document.getElementById('zodiac');
-    zodiacArea.innerHTML = `
-        <details open>
-            <summary>
-                <img class="zodiac-img" src="images/${zodiac}.png" id="select-zodiac" width="64" alt="${zodiac}" title="Change"/>
-                <div>
-                    <h2>${zodiac.charAt(0).toUpperCase()}${zodiac.slice(1)}</h2>
-                    <h4>${today.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h4>
-                </div>
-            </summary>
-            <div id="horoscope" class="horoscope">
-                <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px; margin:auto;"  loop autoplay></lottie-player>
-            </div>
-        </details>
-    `;
-    document.getElementById("select-zodiac").addEventListener("click", toggleModal);
-    document.getElementById("about-button").addEventListener("click", toggleAbout);
-    document.getElementById("close-about").addEventListener("click", toggleAbout);
-    fetch('https://astro-answer.com/api/horoscope',
-        {
-            method: "POST",
-            body: JSON.stringify({zodiac}),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-            },
-    }).then(function (response) {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return Promise.reject(response);
+const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+const today = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+
+const skeleton = '<span class="skeleton"></span><span class="skeleton"></span><span class="skeleton short"></span>';
+
+const fetchText = (url, field) => fetch(url).then((response) =>
+    response.ok ? response.json().then((data) => data[field]) : Promise.reject(response)
+);
+
+// Dialogs
+const zodiacDialog = document.getElementById('zodiac-dialog');
+const aboutDialog = document.getElementById('about');
+
+document.querySelectorAll('dialog').forEach((dialog) => {
+    dialog.addEventListener('click', (event) => {
+        // Close on close button or a click on the backdrop (outside the dialog box)
+        const rect = dialog.getBoundingClientRect();
+        const outside = event.clientX < rect.left || event.clientX > rect.right
+            || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (event.target.closest('[data-close]') || (event.target === dialog && outside)) {
+            dialog.close();
         }
-    }).then(function (data) {
-        document.getElementById('horoscope').innerText = data.horoscope;
-    }).catch(function (err) {
-        document.getElementById('horoscope').innerText = 'No horoscope available at the moment. Try again later.';
     });
-}
+});
+document.getElementById('about-button').addEventListener('click', () => aboutDialog.showModal());
 
-const getAnswer = (event) => {
-    event?.preventDefault();
-    const question = document.getElementById('question').value;
-    document.getElementById('answer').innerHTML = `
-       <lottie-player src="/lotties/loading.json"  background="transparent"  speed="1"  style="width: 200px; margin:auto;"  loop autoplay></lottie-player>
-`;
-    fetch('https://astro-answer.com/api/question',
-        {
-            method: "POST",
-            body: JSON.stringify({question}),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-            },
-        }).then(function (response) {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return Promise.reject(response);
-        }
-    }).then(function (data) {
-        document.getElementById('answer').innerText = data.answer;
-    }).catch(function () {
-        document.getElementById('answer').innerText = 'No answer available at the moment. Try again later.';
-    });
-}
+const openZodiacDialog = () => zodiacDialog.showModal();
 
-navigator.geolocation.getCurrentPosition(successCallback);
-
-document.getElementById('modal').innerHTML = zodiacs.map((z)=> `
-    <figure class="select-zodiac" title="${z}">
-            <img src="images/${z}.png"  width="128" alt="${z}" >
-            <figcaption>${z.charAt(0).toUpperCase()}${z.slice(1)}</figcaption>
-        </figure>
+document.getElementById('zodiac-grid').innerHTML = Object.entries(zodiacs).map(([z, dates]) => `
+    <button class="zodiac-option" type="button" data-zodiac="${z}">
+        <img src="images/zodiac/${z}.svg" width="96" height="96" alt="">
+        <span class="zodiac-name">${capitalize(z)}</span>
+        <span class="zodiac-dates">${dates}</span>
+    </button>
 `).join('');
-document.querySelectorAll(".select-zodiac").forEach((element)=>element.addEventListener("click", toggleModal));
 
+document.getElementById('zodiac-grid').addEventListener('click', (event) => {
+    const option = event.target.closest('[data-zodiac]');
+    if (!option) return;
+    const zodiac = option.dataset.zodiac;
+    try { localStorage.setItem('zodiac', zodiac); } catch (e) {}
+    selectedZodiac = zodiac;
+    if (isExtension) {
+        chrome.storage.sync.set({zodiac});
+    }
+    zodiacDialog.close();
+    showHoroscope(zodiac);
+});
 
-let zodiac = localStorage.getItem('zodiac');
+// Horoscope
+let selectedZodiac = null;
 
-if(isExtension) {
-    chrome.storage.sync.get(['zodiac'], function(items) {
-        zodiac = items.zodiac;
+const showHoroscope = (zodiac) => {
+    if (!zodiacs[zodiac]) return;
+    selectedZodiac = zodiac;
+    const card = document.getElementById('zodiac');
+    card.innerHTML = `
+        <div class="horoscope-header">
+            <button class="zodiac-badge" id="change-zodiac" type="button" title="Change sign">
+                <img src="images/zodiac/${zodiac}.svg" width="64" height="64" alt="${capitalize(zodiac)}">
+            </button>
+            <div>
+                <h2>${capitalize(zodiac)}</h2>
+                <p class="muted date-line">${today}</p>
+            </div>
+            <button class="link-button change" id="change-zodiac-link" type="button">Change</button>
+        </div>
+        <p id="horoscope" class="horoscope">${skeleton}</p>
+    `;
+    document.getElementById('change-zodiac').addEventListener('click', openZodiacDialog);
+    document.getElementById('change-zodiac-link').addEventListener('click', openZodiacDialog);
+    fetchText(`${API}/horoscope/${zodiac}`, 'horoscope')
+        .then((horoscope) => document.getElementById('horoscope').textContent = horoscope)
+        .catch(() => document.getElementById('horoscope').textContent = 'No horoscope available at the moment. Try again later.');
+};
+
+document.getElementById('choose-zodiac').addEventListener('click', openZodiacDialog);
+
+// One question per day
+const localDay = () => new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+
+const loadAnswer = () => {
+    try {
+        const saved = JSON.parse(localStorage.getItem('answer'));
+        return saved && saved.day === localDay() ? saved : null;
+    } catch (e) {
+        return null;
+    }
+};
+
+const untilTomorrow = () => {
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+    const minutes = Math.ceil((midnight - new Date()) / 60000);
+    return minutes >= 60 ? `${Math.floor(minutes / 60)}h ${minutes % 60}m` : `${minutes}m`;
+};
+
+const escapeHtml = (text) => text.replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+
+const renderAsk = () => {
+    const ask = document.getElementById('ask');
+    const saved = loadAnswer();
+    if (saved) {
+        ask.innerHTML = `
+            <p class="question">“${escapeHtml(saved.question)}”</p>
+            <p class="answer">${saved.answer ? escapeHtml(saved.answer) : 'The stars have already answered today.'}</p>
+            <p class="muted next">You can ask the stars your next question in <span id="countdown">${untilTomorrow()}</span></p>
+        `;
+        return;
+    }
+    ask.innerHTML = `
+        <form id="question-form" autocomplete="off">
+            <div class="input-wrapper">
+                <input type="text" id="question" minlength="5" maxlength="300" required
+                       placeholder="Ask the stars a question…" aria-label="Ask the stars one question today">
+                <button class="button" type="submit">Ask</button>
+            </div>
+        </form>
+    `;
+    document.getElementById('question-form').addEventListener('submit', askQuestion);
+};
+
+const askQuestion = (event) => {
+    event.preventDefault();
+    const question = document.getElementById('question').value.trim();
+    const ask = document.getElementById('ask');
+    ask.innerHTML = `
+        <p class="question">“${escapeHtml(question)}”</p>
+        <p class="answer">${skeleton}</p>
+    `;
+    const save = (answer) => {
+        try { localStorage.setItem('answer', JSON.stringify({day: localDay(), question, answer})); } catch (e) {}
+        renderAsk();
+    };
+    fetch(`${API}/ask`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            question,
+            zodiac: selectedZodiac,
+            place,
+            localTime: new Date().toLocaleString('en-GB', {dateStyle: 'full', timeStyle: 'short'}),
+            ...coords,
+        }),
+    }).then((response) => {
+        if (response.status === 429) return save(null);
+        if (!response.ok) return Promise.reject(response);
+        return response.json().then((data) => save(data.answer));
+    }).catch(() => {
+        renderAsk();
+        document.getElementById('question').value = question;
+        document.getElementById('question-form').insertAdjacentHTML('beforeend',
+            '<p class="muted">The stars are clouded right now. Try again in a moment.</p>');
     });
+};
+
+renderAsk();
+setInterval(() => {
+    const countdown = document.getElementById('countdown');
+    if (countdown) {
+        loadAnswer() ? countdown.textContent = untilTomorrow() : renderAsk();
+    }
+}, 30 * 1000);
+
+// Restore the saved zodiac sign
+if (isExtension) {
+    chrome.storage.sync.get(['zodiac'], (items) => showHoroscope(items.zodiac || localStorage.getItem('zodiac')));
+} else {
+    try { showHoroscope(localStorage.getItem('zodiac')); } catch (e) {}
 }
-
-if (zodiac) { setZodiacAndGetHoroscope(zodiac) }
-
-const form = document.getElementById("question-form");
-
-form.addEventListener("submit", getAnswer);
-
-

@@ -1,7 +1,7 @@
 {
   "name": "Astro Answer New Tab",
-  "description": "Explore the wisdom of the universe with AI-generated horoscopes and personalized answers to your questions in every new tab",
-  "version": "0.0.4",
+  "description": "Explore the wisdom of the universe with AI-generated daily horoscopes in every new tab",
+  "version": "0.1.0",
   "manifest_version": 3,
   "icons": {
     "16": "icon16.png",
@@ -16,7 +16,6 @@
     "geolocation"
   ],
   "host_permissions": [
-    "https://astro-answer.com/api/horoscope",
-    "https://astro-answer.com/api/question"
+    "https://astro-answer.com/api/*"
   ]
 }

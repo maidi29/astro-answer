@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="taurus">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#3a2466"/>
+      <stop offset="1" stop-color="#0d0a24"/>
+    </radialGradient>
+    <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE785"/>
+      <stop offset="0.55" stop-color="#fad0e3"/>
+      <stop offset="1" stop-color="#DA3BB3"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="50" cy="50" r="49" fill="url(#bg)"/>
+  <circle cx="50" cy="50" r="47.5" fill="none" stroke="#FFE785" stroke-opacity="0.7" stroke-width="0.8"/>
+  <path d="M93.00 50.00 L96.00 50.00 M93.82 57.73 L95.30 57.99 M91.82 65.22 L93.23 65.73 M87.24 71.50 L89.84 73.00 M84.09 78.60 L85.24 79.57 M78.60 84.09 L79.57 85.24 M71.50 87.24 L73.00 89.84 M65.22 91.82 L65.73 93.23 M57.73 93.82 L57.99 95.30 M50.00 93.00 L50.00 96.00 M42.27 93.82 L42.01 95.30 M34.78 91.82 L34.27 93.23 M28.50 87.24 L27.00 89.84 M21.40 84.09 L20.43 85.24 M15.91 78.60 L14.76 79.57 M12.76 71.50 L10.16 73.00 M8.18 65.22 L6.77 65.73 M6.18 57.73 L4.70 57.99 M7.00 50.00 L4.00 50.00 M6.18 42.27 L4.70 42.01 M8.18 34.78 L6.77 34.27 M12.76 28.50 L10.16 27.00 M15.91 21.40 L14.76 20.43 M21.40 15.91 L20.43 14.76 M28.50 12.76 L27.00 10.16 M34.78 8.18 L34.27 6.77 M42.27 6.18 L42.01 4.70 M50.00 7.00 L50.00 4.00 M57.73 6.18 L57.99 4.70 M65.22 8.18 L65.73 6.77 M71.50 12.76 L73.00 10.16 M78.60 15.91 L79.57 14.76 M84.09 21.40 L85.24 20.43 M87.24 28.50 L89.84 27.00 M91.82 34.78 L93.23 34.27 M93.82 42.27 L95.30 42.01 " stroke="#FFE785" stroke-opacity="0.45" stroke-width="0.6"/>
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#fad0e3" stroke-opacity="0.25" stroke-width="0.5" stroke-dasharray="1.5 2.5"/>
+  <path d="M70 67.9600530417264 Q70 69.7 71.7399469582736 69.7 Q70 69.7 70 71.43994695827361 Q70 69.7 68.2600530417264 69.7 Q70 69.7 70 67.9600530417264Z" fill="#FFE785"/><circle cx="83.2" cy="63.9" r="0.93" fill="#fff" opacity="0.85"/><circle cx="36.9" cy="20" r="0.99" fill="#fff" opacity="0.95"/><path d="M46 81.79646644154235 Q46 83.4 47.603533558457656 83.4 Q46 83.4 46 85.00353355845766 Q46 83.4 44.396466441542344 83.4 Q46 83.4 46 81.79646644154235Z" fill="#FFE785"/><circle cx="23.2" cy="64.6" r="0.73" fill="#fff" opacity="0.51"/><circle cx="17.7" cy="45.6" r="0.84" fill="#fff" opacity="0.52"/><path d="M71.1 24.672065968319835 Q71.1 27.1 73.52793403168016 27.1 Q71.1 27.1 71.1 29.527934031680168 Q71.1 27.1 68.67206596831983 27.1 Q71.1 27.1 71.1 24.672065968319835Z" fill="#FFE785"/><circle cx="30" cy="78.3" r="0.66" fill="#fff" opacity="0.50"/><circle cx="20.8" cy="35.8" r="0.86" fill="#fff" opacity="0.57"/>
+  <path d="M28 30 C32 42 40 46 50 46 C60 46 68 42 72 30 M50 46 a13 13 0 1 0 0.01 0" fill="none" stroke="url(#glyph)" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>

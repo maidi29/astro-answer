@@ -20,6 +20,11 @@
   --color-tertiary: #fad0e3;
   --color-quartiary: #FFE785;
   --color-highlight: #DA3BB3;
+  --color-muted: #a1a2d1;
+  --glass: rgba(9, 14, 38, 0.62);
+  --glass-border: rgba(250, 208, 227, 0.14);
+  --radius: 1.25rem;
+  --shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.45);
 }
 
 * {
@@ -27,7 +32,7 @@
 }
 
 html {
-  font-size: 13px;
+  font-size: 15px;
 }
 
 @media screen and (min-width: 600px) {
@@ -36,28 +41,28 @@ html {
   }
 }
 
-
 body {
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
   font: 1rem Comfortaa, sans-serif;
   background: var(--color-primary);
   color: var(--color-tertiary);
-  line-height: 1.5;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1 {
   font-family: Android, Comfortaa, sans-serif;
   font-weight: normal;
-  font-size: 3rem;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
   margin: 0;
-  text-shadow: 2px 2px #000;
   line-height: 1;
   text-align: center;
-}
-
-h1 span {
-  background: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-quartiary), var(--color-tertiary) 45%, var(--color-highlight));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 12px rgba(218, 59, 179, 0.35));
 }
 
 h2, h3, h4 {
@@ -78,226 +83,473 @@ container {
   display: none;
 }
 
+/* Star map */
+
 canvas, #celestial-map {
   height: 100% !important;
   width: 100vw !important;
   object-fit: cover;
   display: block;
-  position:fixed;
+  position: fixed;
   z-index: 0;
   cursor: grab;
 }
 
-/* (Optional) Apply a "closed-hand" cursor during drag operation. */
 canvas:active, #celestial-map:active {
   cursor: grabbing;
 }
 
 #celestial-zoomin, #celestial-zoomout {
-  position:absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
-  width: 2rem;
-  height: 2rem;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 2.25rem;
+  height: 2.25rem;
   padding: 0;
   color: #fff;
-  border: 1px solid #fff;
-  opacity: 0.2;
-  background: var(--color-primary);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  opacity: 0.45;
+  background: var(--glass);
   cursor: pointer;
-  font-size: 1.5rem;
-  border-radius: 0;
+  font-size: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-#celestial-zoomout {
-  right: 3rem;
+  transition: opacity 200ms;
 }
 
+#celestial-zoomin:hover, #celestial-zoomout:hover {
+  opacity: 0.9;
+}
+
+#celestial-zoomout {
+  right: 3.75rem;
+}
+
+/* Layout */
+
 .main {
-  position: absolute;
-  min-width: calc(100% - 4rem);
-  min-height: calc(100% - 4rem);
-  margin: 2rem;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto auto;
+  grid-template-areas:
+    "header"
+    "."
+    "horoscope"
+    "footer";
+  gap: 1.25rem;
   pointer-events: none;
 }
 
-.main * {
+.main > * {
   pointer-events: auto;
 }
 
-.zodiac {
-  align-self: flex-start;
-  padding: 1rem;
-  background: var(--color-primary);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.zodiac summary {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  cursor: pointer;
-}
-
-.zodiac summary:after {
-  content: "\003C";
-  display: block;
-  rotate: -90deg;
-  transition: rotate 500ms ease-in-out;
-  font-size: 1.75rem;
-  cursor: pointer;
-  margin-left: auto;
-}
-
-.zodiac details[open] summary:after {
-  rotate: 90deg;
-}
-
-.horoscope {
-  margin-top: 1rem;
-}
-
 @media screen and (min-width: 900px) {
-  .zodiac {
-    max-width: 30%;
+  .main {
+    padding: 2rem;
   }
 }
 
-.color-secondary-font {
-  color: #a1a2d1;
+.header {
+  grid-area: header;
+  text-align: center;
+  justify-self: center;
+  padding: 0.5rem 2rem;
+  /* Keeps star map labels from clashing with the title */
+  background: radial-gradient(closest-side, rgba(7, 14, 34, 0.85), rgba(7, 14, 34, 0));
 }
 
-button {
-  padding: 1rem;
-  font-size: 1.2rem;
-  color: #fff;
-  width: auto;
-  cursor: pointer;
-  border: none;
-  background-image: linear-gradient(35deg, var(--color-secondary), var(--color-highlight));
-  background-size: 200% auto;
-  transition: all 500ms ease-in-out;
-  background-position: left center;
+.date {
+  margin: 0.15rem 0 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  transition: opacity 400ms;
 }
 
-button:hover {
-  background-position: right center;
+.header {
+  display: grid;
+  justify-items: center;
 }
 
-.modal {
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--color-primary);
-  justify-content: center;
-  display: none;
+/* The sky line and its reset link share one spot below the title */
+.date, .sky-reset {
+  grid-area: 2 / 1;
 }
 
-.modal figure {
-  display: flex;
+.sky-reset {
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  transition: opacity 400ms;
+}
+
+.date.hidden, .sky-reset.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.card {
+  background: rgba(9, 14, 38, 0.35);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(4px) saturate(140%);
+  -webkit-backdrop-filter: blur(4px) saturate(140%);
+  padding: 1rem 1.25rem;
+  animation: rise 600ms ease-out both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: none; }
+}
+
+.muted {
+  color: var(--color-muted);
   margin: 0;
-  flex-direction: column;
-  gap: 0.5rem;
-  align-items: center;
-  cursor: pointer;
 }
 
-.modal img, .zodiac-img {
-  cursor: pointer;
-  border-radius: 50%;
+/* Horoscope */
+
+.horoscope-card {
+  grid-area: horoscope;
+  justify-self: center;
+  width: 100%;
+  max-width: 44rem;
 }
 
-.zodiac-img {
-  align-self: center;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal figure:hover img, .zodiac details img:hover {
-  box-shadow: 0 0 15px #fff;
-  filter: contrast(150%);
-}
-
-.modal a {
-  text-decoration: underline;
-  color: var(--color-primary);
-}
-
-.modal.about {
-  flex-direction: column;
-  position: absolute;
-  max-width: 40rem;
-  background: var(--color-tertiary);
-  color: var(--color-primary);
-}
-
-.about-button {
-  width: fit-content;
-}
-
-.q-and-a {
-  margin-top: auto;
-  padding: 1rem;
-  background: var(--color-primary);
+.empty-state {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
   align-items: center;
   text-align: center;
-  max-width: 800px;
-  width: 100%;
+  gap: 0.75rem;
 }
 
-label {
-  font-size: 1.2rem;
-}
 
-input {
-  padding: 1rem;
-  border: 0;
-  font-size: 1.2rem;
-  color: var(--color-primary);
-  flex: 1;
-  font-family: Comfortaa, sans-serif;
-}
-
-form {
+.horoscope-header {
   display: flex;
+  align-items: center;
   gap: 1rem;
-  flex-direction: column;
-  width: 100%;
 }
+
+
+.horoscope-header h2 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.date-line {
+  font-size: 0.85rem;
+}
+
+.zodiac-badge {
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 300ms, box-shadow 300ms;
+}
+
+.zodiac-badge img {
+  display: block;
+}
+
+.zodiac-badge:hover {
+  transform: rotate(-8deg) scale(1.05);
+  box-shadow: 0 0 1.5rem rgba(218, 59, 179, 0.5);
+}
+
+.change {
+  margin-left: auto;
+  align-self: flex-start;
+}
+
+.horoscope {
+  margin: 0.75rem 0 0;
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: #fff;
+}
+
+
+/* Question of the day */
+
+.ask {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(250, 208, 227, 0.12);
+}
+
+.ask form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 
 .input-wrapper {
   display: flex;
-  width: 100%;
+  gap: 0.5rem;
+}
+
+.input-wrapper input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(250, 208, 227, 0.2);
+  border-radius: 999px;
+  background: rgba(7, 14, 34, 0.5);
+  color: #fff;
+  font: inherit;
+}
+
+.input-wrapper input::placeholder {
+  color: var(--color-muted);
+  opacity: 0.7;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: var(--color-quartiary);
+}
+
+.question {
+  margin: 0 0 0.35rem;
+  color: var(--color-muted);
+  font-style: italic;
 }
 
 .answer {
-  font-size: 1.3rem;
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: #fff;
 }
 
-details summary::-webkit-details-marker {
-  display:none;
+.next {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
 }
 
-footer {
-  font-size: 0.75rem;
-  align-self: flex-start;
+/* Loading skeleton */
+
+.skeleton {
+  display: block;
+  height: 0.9em;
+  margin: 0.55em 0;
+  border-radius: 0.5em;
+  background: linear-gradient(90deg, rgba(250, 208, 227, 0.08), rgba(250, 208, 227, 0.22), rgba(250, 208, 227, 0.08));
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+.skeleton.short {
+  width: 60%;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Buttons */
+
+button {
+  font-family: inherit;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  background-image: linear-gradient(35deg, var(--color-secondary), var(--color-highlight), var(--color-secondary));
+  background-size: 200% auto;
+  background-position: left center;
+  box-shadow: 0 0.5rem 1.5rem rgba(218, 59, 179, 0.3);
+  transition: background-position 500ms ease-in-out, transform 200ms;
+}
+
+.button:hover {
+  background-position: right center;
+  transform: translateY(-1px);
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: var(--color-tertiary);
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-quartiary);
+  outline-offset: 3px;
+}
+
+/* Dialogs */
+
+.dialog {
+  width: min(44rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  background: rgba(12, 16, 42, 0.92);
+  color: var(--color-tertiary);
+  box-shadow: var(--shadow);
+}
+
+.dialog[open] {
+  animation: pop 250ms ease-out;
+}
+
+.dialog::backdrop {
+  background: rgba(3, 7, 17, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Only scales, so the dialog is never stuck invisible if the animation doesn't run */
+@keyframes pop {
+  from { transform: scale(0.96); }
+}
+
+.dialog-header {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.dialog-header h2 {
+  font-size: 1.35rem;
+}
+
+.close {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-tertiary);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: rgba(250, 208, 227, 0.1);
+}
+
+.zodiac-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
   gap: 0.5rem;
 }
+
+.zodiac-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.75rem 0.5rem;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.zodiac-option img {
+  margin-bottom: 0.4rem;
+  border-radius: 50%;
+  transition: transform 300ms, box-shadow 300ms;
+}
+
+.zodiac-option:hover img {
+  transform: scale(1.06);
+  box-shadow: 0 0 1.5rem rgba(218, 59, 179, 0.45);
+}
+
+.zodiac-name {
+  font-size: 1rem;
+}
+
+.zodiac-dates {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+@media screen and (max-width: 480px) {
+  .zodiac-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .zodiac-option img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .zodiac-dates {
+    font-size: 0.65rem;
+  }
+}
+
+.about-dialog {
+  width: min(34rem, calc(100vw - 2rem));
+}
+
+.about-dialog p {
+  margin: 0 0 1rem;
+}
+
+.links {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.links a {
+  text-decoration: underline;
+}
+
+/* Footer */
+
+.footer {
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  justify-self: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 404 page */
 
 .page-body {
   display: flex;

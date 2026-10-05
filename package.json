@@ -8,6 +8,7 @@
     "build-extension-newtab": "copyfiles -e \"./public/manifest.json\" -e \"./public/background.js\" -u 1 ./public/**/* build-newtab && node -e \"require('fs').rename('./build-newtab/manifest-newtab.json', './build-newtab/manifest.json', function(err) { if (err) console.log(err); console.log('File successfully renamed!') })\""
   },
   "dependencies": {
+    "astronomy-engine": "^2.1.19",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
@@ -16,7 +17,6 @@
     "express": "~4.16.1",
     "express-validator": "^6.15.0",
     "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "openai": "^4.20.1"
   }

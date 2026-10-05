@@ -5,3 +5,5 @@ notes.txt
 *.zip
 build
 build-newtab
+cache
+.claude
