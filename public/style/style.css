@@ -276,7 +276,7 @@ canvas:active, #celestial-map:active {
 
 .horoscope {
   margin: 0.75rem 0 0;
-  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
   line-height: 1.7;
   color: #fff;
 }
@@ -331,7 +331,7 @@ canvas:active, #celestial-map:active {
 
 .answer {
   margin: 0;
-  font-size: clamp(1.05rem, 2vw, 1.2rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
   line-height: 1.7;
   color: #fff;
 }
